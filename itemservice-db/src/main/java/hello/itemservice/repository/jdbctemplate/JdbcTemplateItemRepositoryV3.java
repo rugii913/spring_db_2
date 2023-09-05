@@ -119,3 +119,23 @@ public class  JdbcTemplateItemRepositoryV3 implements ItemRepository {
         return BeanPropertyRowMapper.newInstance(Item.class); // cameCase 자동 변환 지원
     }
 }
+/*
+* (정리)
+* - JdbcTemplate: 반복 문제 해결, 설정 간단 / 동적 쿼리 해결 어려움(가장 큰 단점)
+*  - 순서 기반 파라미터 바인딩 문제
+* - NamedParameterJdbcTemplate: 이름 기반 파라미터 바인딩 지원
+*  - Map 혹은 SqlParameterSource 사용(이름이 다른 경우 DB에서 별칭으로 가져오기)
+* - SimpleJdbcInsert: insert 쿼리 쉽게
+* - SimpleJdbcCall: 스토어드 프로시저 편리하게 호출(강의에서 안 다룸, 매뉴얼 참고)
+* *** JdbcTemplate 사용 공식 매뉴얼 docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-JdbcTemplate
+*
+* - 조회
+*  - 단건 조회
+*   - 단순 데이터: queryForObject(~) 객체가 아니라 단순 데이터 하나라면 Integer.class, String.class 같은 클래스 정보 넘김
+*   - 객체: RowMapper을 넘김, RowMapper를 변수로 분리하면 재사용할 수도 있음
+* - 변경: update(~) 사용 - 반환값은 SQL 실행 결과 영향 받은 로우 수
+* - 기타 기능
+*  - DML 외의 SQL 실행시 execute(~) 사용
+*  - update(스토어드 프로시저 SQL문, ~)으로 스토어드 프로시저도 호출 가능
+*
+* */
