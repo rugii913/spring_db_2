@@ -69,7 +69,8 @@ class ItemRepositoryTest {
         itemRepository.save(item2);
         itemRepository.save(item3);
 
-        //둘 다 없음 검증
+        // 여기서 3개 이상의 데이터가 조회되는 문제 발생 - 테스트에서는 격리된 환경이 중요함
+        // 두 조건 모두 없는 경우 검증
         test(null, null, item1, item2, item3);
         test("", null, item1, item2, item3);
 
