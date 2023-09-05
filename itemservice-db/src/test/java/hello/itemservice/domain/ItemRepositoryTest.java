@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional // 원래는 트랜잭션 시작하고 문제 없으면 커밋하는 어노테이션 - 테스트에서는 기본이 항상 롤백
-@Commit // @Rollback(value = false)
+// @Commit // @Rollback(value = false)
 @SpringBootTest
 class ItemRepositoryTest {
 
