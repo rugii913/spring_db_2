@@ -18,7 +18,7 @@
     </update>
 
     <select id="findById" resultType="Item">
-        select id, iem_name, price, quantity
+        select id, item_name, price, quantity
         from item
         where id = #{id}
     </select>
@@ -32,8 +32,8 @@
                 and item_name like concat('%', #{itemName}, '%')
             </if>
             <if test="maxPrice != null">
-                and price $lt;= #{maxPrice}
-                /*<![CDATA[and price <= #{maxPrice}]]>*/
+                and price &lt;= #{maxPrice}
+                <!--<![CDATA[and price <= #{maxPrice}]]> CDATA 구문 문법 사용 가능-->
             </if>
         </where>
     </select>
