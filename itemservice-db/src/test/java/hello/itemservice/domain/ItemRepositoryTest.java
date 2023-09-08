@@ -4,6 +4,7 @@ import hello.itemservice.repository.ItemRepository;
 import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import hello.itemservice.repository.memory.MemoryItemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 @Transactional // 원래는 트랜잭션 시작하고 문제 없으면 커밋하는 어노테이션 - 테스트에서는 기본이 항상 롤백
 // @Commit // @Rollback(value = false)
 @SpringBootTest
@@ -61,6 +63,9 @@ class ItemRepositoryTest {
     }
 
     @Test
+    // @Commit
+    // cf. update의 경우 테스트에서 SQL 나가는 것을 확인하고 싶으면 @Commit해야함
+    // 캐시에 저장하고 있다가 commit하는 순간에 update 쿼리를 날리기 때문
     void updateItem() {
         //given
         Item item = new Item("item1", 10000, 10);
@@ -85,6 +90,8 @@ class ItemRepositoryTest {
         Item item2 = new Item("itemA-2", 20000, 20);
         Item item3 = new Item("itemB-1", 30000, 30);
 
+        log.info("repository={}", itemRepository.getClass()); // 예외 변환용 SpringCGLIB 프록시 객체 확인 가능
+        // @Transactional, @Repository 다 빼면, 프록시가 아니라 JpaItemRepository 객체 로그를 볼 수 있음
         itemRepository.save(item1);
         itemRepository.save(item2);
         itemRepository.save(item3);
