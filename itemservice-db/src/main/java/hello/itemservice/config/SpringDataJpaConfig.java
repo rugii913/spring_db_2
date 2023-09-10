@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class SpringDataJpaConfig {
 
+    // EntityManager 필요 없음, 알아서 처리해줌
     private final SpringDataJpaItemRepository springDataJpaItemRepository;
 
     @Bean
