@@ -1,6 +1,8 @@
 package hello.itemservice.repository.jpa;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import hello.itemservice.domain.Item;
 import hello.itemservice.domain.QItem;
@@ -49,8 +51,7 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         return Optional.ofNullable(item);
     }
 
-    @Override
-    public List<Item> findAll(ItemSearchCond cond) {
+    public List<Item> findAllOld(ItemSearchCond cond) {
         String itemName = cond.getItemName();
         Integer maxPrice = cond.getMaxPrice();
 
@@ -70,5 +71,32 @@ public class JpaItemRepositoryV3 implements ItemRepository {
                 .fetch();
 
         return result;
+    }
+
+    @Override // findAllOld(~)에서 리팩토링 -
+    public List<Item> findAll(ItemSearchCond cond) {
+        String itemName = cond.getItemName();
+        Integer maxPrice = cond.getMaxPrice();
+
+        return query.select(item)
+                .from(item)
+                // .where(item.itemName.like("..").and(item.price.loe(1000))) // 동적 쿼리가 아니라면 이런 식으로 짤 수 있다.
+                // 이를 활용 - 동적인 파라미터를 받는 조건 메서드를 분리,
+                .where(likeItemName(itemName), maxPrice(maxPrice))
+                .fetch();
+    }
+
+    private BooleanExpression likeItemName(String itemName) {
+        if (StringUtils.hasText(itemName)) {
+            return item.itemName.like("%" + itemName + "%");
+        }
+        return null; // null이면 where 조건에서 무시됨
+    }
+
+    private BooleanExpression maxPrice(Integer maxPrice) {
+        if (maxPrice != null) {
+            return item.price.loe(maxPrice);
+        }
+        return null;
     }
 }
