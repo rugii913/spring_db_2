@@ -16,7 +16,7 @@ public class MemberRepository {
     // @PersistenceContext - 예전에는 이 어노테이션 필수였는데, 지금은 스프링 버전 업 되면서 알아서 주입
     private final EntityManager em;
 
-    @Transactional // JPA의 모든 데이터 변경은 트랜잭션 안에서 이뤄진다.(없으면 에러)
+    // @Transactional // JPA의 모든 데이터 변경은 트랜잭션 안에서 이뤄진다.(없으면 에러) // 제거 - service에서 transaction 시작
     public void save(Member member) {
         log.info("member 저장");
         em.persist(member);

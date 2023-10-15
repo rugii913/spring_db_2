@@ -3,6 +3,7 @@ package hello.springtx.propagation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -12,6 +13,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LogRepository logRepository;
 
+    @Transactional // 추가
     public void joinV1(String username) { // 트랜잭션을 각각 사용하는 예제
         Member member = new Member(username);
         Log logMessage = new Log(username);

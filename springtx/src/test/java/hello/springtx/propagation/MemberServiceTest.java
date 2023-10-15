@@ -56,4 +56,22 @@ class MemberServiceTest {
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isEmpty());
     }
+
+    /**
+     * memberService     @Transactional: ON
+     * memberRepository  @Transactional: OFF
+     * logRepository     @Transactional: OFF
+     */
+    @Test
+    void singleTx() {
+        // Given
+        String username = "outerTxOff_success";
+
+        // When
+        memberService.joinV1(username);
+
+        // Then: 모든 데이터가 정상 저장된다.
+        assertTrue(memberRepository.find(username).isPresent());
+        assertTrue(logRepository.find(username).isPresent());
+    }
 }

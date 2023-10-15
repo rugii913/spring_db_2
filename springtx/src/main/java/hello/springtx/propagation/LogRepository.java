@@ -15,7 +15,7 @@ public class LogRepository {
 
     private final EntityManager em;
 
-    @Transactional
+    // @Transactional // 제거 - service에서 transaction 시작
     public void save(Log logMessage) {
         log.info("log 저장");
         em.persist(logMessage);
