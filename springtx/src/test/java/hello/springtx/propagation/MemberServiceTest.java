@@ -90,4 +90,22 @@ class MemberServiceTest {
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isPresent());
     }
+
+    /**
+     * memberService     @Transactional: ON
+     * memberRepository  @Transactional: ON
+     * logRepository     @Transactional: ON Exception
+     */
+    @Test
+    void outerTxOn_fail() {
+        // Given
+        String username = "로그예외_outerTxOn_fail";
+
+        // When: logRepository의 예외 발생 -> memberService까지 예외 올라옴
+        assertThatThrownBy(() -> memberService.joinV1(username)).isExactlyInstanceOf(RuntimeException.class);
+
+        // Then: 모든 데이터가 롤백된다. - 데이터 정합성에 문제 발생하지 않는다. - outerTxOff_fail()와 비교
+        assertTrue(memberRepository.find(username).isEmpty());
+        assertTrue(logRepository.find(username).isEmpty());
+    }
 }
