@@ -129,4 +129,30 @@ class MemberServiceTest {
         assertTrue(memberRepository.find(username).isEmpty());
         assertTrue(logRepository.find(username).isEmpty());
     }
+
+    /**
+     * memberService     @Transactional: ON
+     * memberRepository  @Transactional: ON
+     * logRepository     @Transactional: ON(REQUIRES_NEW) Exception
+     */
+    @Test
+    void recoverException_success() { // 다른 방법도 있지만, 이 방법이 무난하다.
+        // Given
+        String username = "로그예외_recoverException_success";
+
+        // When: logRepository의 예외 발생 -> memberService.joinV2(~)에서 예외 잡아서 복구
+        memberService.joinV2(username);
+
+        // Then: member 저장, log 롤백
+        // assertTrue(memberRepository.find(username).isPresent()); // 필요: true, 실제 false - 내부 트랜잭션에서 rollbackOnly 마크하기 때문에 여전히 롤백됨
+        assertTrue(memberRepository.find(username).isPresent());
+        assertTrue(logRepository.find(username).isEmpty());
+    }
+
+    /*
+    * (주의)
+    * - REQUIRES_NEW를 사용하게 되면 하나의 HTTP 요청에 동시에 두 개의 DB 커넥션을 사용 - 먼저 시작한 트랜잭션은 계속 유지 -> 성능 문제 있을 수 있음
+    * - REQUIRES_NEW를 사용하지 않을 수 있다면, 사용하지 않는 편이 낫다. (구조상 REQUIRES_NEW를 사용하는 게 낫다면, 선택할 수는 있지만, trade-off는 고려)
+    *   - ex. 구조를 변경해서 다른 트랜잭션이 끝나는 걸 기다리지는 않고 순차적으로 트랜잭션을 사용하는 형태가 가능한 경우
+    * */
 }
