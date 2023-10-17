@@ -27,6 +27,7 @@ public class MemberService {
         log.info("== logRepository 호출 종료 ==");
     }
 
+    @Transactional
     public void joinV2(String username) { // V1과 같은데, 로그 저장 실패해서 예외 발생한 경우, 예외 잡아서 먹고 정상 흐름으로 돌림
         Member member = new Member(username);
         Log logMessage = new Log(username);
